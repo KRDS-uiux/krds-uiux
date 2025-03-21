@@ -1,0 +1,214 @@
+{
+  "font-size": {
+    "body": {
+      "large": {
+        "type": "number",
+        "value": 19
+      },
+      "medium": {
+        "type": "number",
+        "value": 17
+      },
+      "small": {
+        "type": "number",
+        "value": 15
+      },
+      "xsmall": {
+        "type": "number",
+        "value": 13
+      }
+    },
+    "display": {
+      "large": {
+        "type": "number",
+        "value": 60
+      },
+      "medium": {
+        "type": "number",
+        "value": 44
+      },
+      "small": {
+        "type": "number",
+        "value": 36
+      }
+    },
+    "heading": {
+      "large": {
+        "type": "number",
+        "value": 32
+      },
+      "medium": {
+        "type": "number",
+        "value": 24
+      },
+      "small": {
+        "type": "number",
+        "value": 19
+      },
+      "xlarge": {
+        "type": "number",
+        "value": 40
+      },
+      "xsmall": {
+        "type": "number",
+        "value": 17
+      },
+      "xxsmall": {
+        "type": "number",
+        "value": 15
+      }
+    },
+    "label": {
+      "large": {
+        "type": "number",
+        "value": 19
+      },
+      "medium": {
+        "type": "number",
+        "value": 17
+      },
+      "small": {
+        "type": "number",
+        "value": 15
+      },
+      "xsmall": {
+        "type": "number",
+        "value": 13
+      }
+    },
+    "navigation": {
+      "depth-medium": {
+        "type": "number",
+        "value": 17
+      },
+      "depth-medium-bold": {
+        "type": "number",
+        "value": 17
+      },
+      "depth-small": {
+        "type": "number",
+        "value": 15
+      },
+      "depth-small-bold": {
+        "type": "number",
+        "value": 15
+      },
+      "title-medium": {
+        "type": "number",
+        "value": 24
+      },
+      "title-small": {
+        "type": "number",
+        "value": 19
+      }
+    }
+  },
+  "gap-layout": {
+    "breadcrumb-h1": {
+      "type": "number",
+      "value": "{number.14}"
+    },
+    "contents-footer": {
+      "type": "number",
+      "value": "{number.18}"
+    },
+    "contents-right": {
+      "type": "number",
+      "value": "{number.14}"
+    },
+    "h1-h2": {
+      "type": "number",
+      "value": "{number.16}"
+    },
+    "h2-h2": {
+      "type": "number",
+      "value": "{number.20}"
+    },
+    "h2-h3": {
+      "type": "number",
+      "value": "{number.14}"
+    },
+    "h3-h3": {
+      "type": "number",
+      "value": "{number.18}"
+    },
+    "h3-h4": {
+      "type": "number",
+      "value": "{number.10}"
+    },
+    "h4-h4": {
+      "type": "number",
+      "value": "{number.14}"
+    },
+    "h4-h5": {
+      "type": "number",
+      "value": "{number.8}"
+    },
+    "h5-h5": {
+      "type": "number",
+      "value": "{number.12}"
+    },
+    "header-breadcrumb": {
+      "type": "number",
+      "value": "{number.10}"
+    },
+    "image-text-large": {
+      "type": "number",
+      "value": "{number.12}"
+    },
+    "image-text-medium": {
+      "type": "number",
+      "value": "{number.10}"
+    },
+    "image-text-small": {
+      "type": "number",
+      "value": "{number.9}"
+    },
+    "left-contents": {
+      "type": "number",
+      "value": "{number.18}"
+    },
+    "text-text-large": {
+      "type": "number",
+      "value": "{number.9}"
+    },
+    "text-text-medium": {
+      "type": "number",
+      "value": "{number.8}"
+    },
+    "text-text-small": {
+      "type": "number",
+      "value": "{number.7}"
+    },
+    "title-body-large": {
+      "type": "number",
+      "value": "{number.10}"
+    },
+    "title-body-medium": {
+      "type": "number",
+      "value": "{number.9}"
+    },
+    "title-body-small": {
+      "type": "number",
+      "value": "{number.8}"
+    }
+  },
+  "padding-card": {
+    "large": {
+      "type": "number",
+      "value": "{number.14}"
+    },
+    "medium": {
+      "type": "number",
+      "value": "{number.12}"
+    },
+    "small": {
+      "type": "number",
+      "value": "{number.10}"
+    },
+    "xsmall": {
+      "type": "number",
+      "value": "{number.8}"
+    }
+  }
+}
