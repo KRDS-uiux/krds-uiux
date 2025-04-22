@@ -74,6 +74,7 @@
     }
     --krds-badge--color-background-basic: var(--krds-#{$mode}-color-background-white);
     --krds-badge--color-text-basic: var(--krds-#{$mode}-color-text-inverse-static);
+    --krds-badge--color-text-warning: var(--krds-#{$mode}-color-text-static);
 
     //class 정의
     & {
@@ -93,6 +94,10 @@
                 @include color-text(#{$color});
             }
         }
+    }
+    //warning text color
+    &.bg-warning {
+        color: var(--krds-badge--color-text-warning);
     }
 }
 

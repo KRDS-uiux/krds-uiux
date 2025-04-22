@@ -7979,6 +7979,7 @@
   --krds-badge--color-disabled-text: var(--krds-light-color-text-disabled-on);
   --krds-badge--color-background-basic: var(--krds-light-color-background-white);
   --krds-badge--color-text-basic: var(--krds-light-color-text-inverse-static);
+  --krds-badge--color-text-warning: var(--krds-light-color-text-static);
 }
 .krds-badge.outline-primary {
   border-width: var(--krds-light-border-width-variable-regular);
@@ -8106,6 +8107,9 @@
   background-color: var(--krds-badge--color-disabled-element-lighter);
   color: var(--krds-badge--color-disabled-text);
 }
+.krds-badge.bg-warning {
+  color: var(--krds-badge--color-text-warning);
+}
 .krds-badge {
   height: var(--krds-badge--size-height);
   line-height: var(--krds-badge--line-height);
@@ -8175,6 +8179,7 @@
   --krds-badge--color-disabled-text: var(--krds-high-contrast-color-text-disabled-on);
   --krds-badge--color-background-basic: var(--krds-high-contrast-color-background-white);
   --krds-badge--color-text-basic: var(--krds-high-contrast-color-text-inverse-static);
+  --krds-badge--color-text-warning: var(--krds-high-contrast-color-text-static);
 }
 [data-krds-mode=high-contrast] .krds-badge.outline-primary {
   border-width: var(--krds-light-border-width-variable-regular);
@@ -8302,6 +8307,9 @@
   background-color: var(--krds-badge--color-disabled-element-lighter);
   color: var(--krds-badge--color-disabled-text);
 }
+[data-krds-mode=high-contrast] .krds-badge.bg-warning {
+  color: var(--krds-badge--color-text-warning);
+}
 
 @media (prefers-color-scheme: dark) {
   [data-krds-mode=theme] .krds-badge {
@@ -8334,6 +8342,7 @@
     --krds-badge--color-disabled-text: var(--krds-high-contrast-color-text-disabled-on);
     --krds-badge--color-background-basic: var(--krds-high-contrast-color-background-white);
     --krds-badge--color-text-basic: var(--krds-high-contrast-color-text-inverse-static);
+    --krds-badge--color-text-warning: var(--krds-high-contrast-color-text-static);
   }
   [data-krds-mode=theme] .krds-badge.outline-primary {
     border-width: var(--krds-light-border-width-variable-regular);
@@ -8460,6 +8469,9 @@
   [data-krds-mode=theme] .krds-badge.bg-light-disabled {
     background-color: var(--krds-badge--color-disabled-element-lighter);
     color: var(--krds-badge--color-disabled-text);
+  }
+  [data-krds-mode=theme] .krds-badge.bg-warning {
+    color: var(--krds-badge--color-text-warning);
   }
 }
 
