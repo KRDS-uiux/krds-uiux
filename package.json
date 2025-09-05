@@ -1,6 +1,6 @@
 {
   "name": "krds-uiux",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "KRDS(Korea Responsive Design System)는 대한민국 디지털 정부를 위한 디자인 시스템입니다. HTML 컴포넌트를 통해 반응형, 접근성을 갖춘 UI/UX를 빠르고 일관되게 개발할 수 있도록 지원합니다. This system ensures consistency and reusability for public sector digital services in Korea.",
   "scripts": {},
   "keywords": [
