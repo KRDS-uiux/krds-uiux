@@ -1,0 +1,296 @@
+/* TTS */
+//사이즈 정의
+@mixin tts-size-variable() {
+	//변수 배열 설정
+	$tts-size: (
+		xsmall: (
+			svg-icon-size: var(--krds-size-height-2), // 16px
+			container-size: var(--krds-size-height-4), // 24px (원형 버튼 크기)
+			gap: var(--krds-gap-1),
+			pc-font-size: var(--krds-pc-font-size-label-small),
+			mobile-font-size: var(--krds-mobile-font-size-label-small),
+		),
+		small: (
+			svg-icon-size: var(--krds-size-height-3), // 20px
+			container-size: var(--krds-size-height-5), // 32px (원형 버튼 크기)
+			gap: var(--krds-gap-1),
+			pc-font-size: var(--krds-pc-font-size-label-small),
+			mobile-font-size: var(--krds-mobile-font-size-label-small),
+		),
+		medium: (
+			svg-icon-size: var(--krds-size-height-4), // 24px
+			container-size: var(--krds-size-height-7), // 48px (원형 버튼 크기)
+			gap: var(--krds-gap-2),
+			pc-font-size: var(--krds-pc-font-size-label-medium),
+			mobile-font-size: var(--krds-mobile-font-size-label-medium),
+		),
+	) !default;
+
+	//css variable 생성
+	@each $size, $types in $tts-size {
+		@each $type, $value in $types {
+			--krds-tts--#{$type}-#{$size}: #{$value};
+		}
+	}
+}
+
+//컬러 정의
+@mixin tts-color-variable($mode) {
+	//변수 배열 정의
+	$tts-color-variable: (
+		default: (
+			icon-fill: var(--krds-#{$mode}-color-background-white),
+			icon-fill-hover: var(--krds-color-#{$mode}-primary-5), // #ECF2FE
+			icon-fill-pressed: var(--krds-color-#{$mode}-primary-10), // #D8E5FD
+			icon-fill-disabled: var(--krds-#{$mode}-color-button-disabled-fill),
+			icon-border: var(--krds-#{$mode}-color-button-primary-fill),
+			icon-border-disabled: var(--krds-#{$mode}-color-button-disabled-border),
+			icon-color: var(--krds-#{$mode}-color-button-primary-fill),
+			icon-color-disabled: var(--krds-#{$mode}-color-text-disabled),
+			text: var(--krds-#{$mode}-color-text-bolder),
+			text-disabled: var(--krds-#{$mode}-color-text-disabled),
+		),
+		pause: (
+			icon-fill: var(--krds-#{$mode}-color-button-primary-fill),
+			icon-fill-hover: var(--krds-#{$mode}-color-button-primary-fill-hover),
+			icon-fill-pressed: var(--krds-#{$mode}-color-button-primary-fill-pressed),
+			icon-fill-disabled: var(--krds-#{$mode}-color-button-disabled-fill),
+			icon-border: var(--krds-#{$mode}-color-button-primary-fill),
+			icon-border-disabled: var(--krds-#{$mode}-color-button-disabled-border),
+			icon-color: var(--krds-#{$mode}-color-text-inverse-static),
+			icon-color-disabled: var(--krds-#{$mode}-color-text-disabled),
+			text: var(--krds-#{$mode}-color-text-bolder),
+			text-disabled: var(--krds-#{$mode}-color-text-disabled),
+		),
+	) !default;
+
+	//css variable 생성
+	@each $type, $colors in $tts-color-variable {
+		@each $color, $value in $colors {
+			--krds-tts--color-#{$type}-#{$color}: #{$value};
+		}
+	}
+}
+
+//컬러별 mixin
+@mixin tts-color($type: default) {
+	.krds-tts-icon {
+		background-color: var(--krds-tts--color-#{$type}-icon-fill);
+		border-color: var(--krds-tts--color-#{$type}-icon-border);
+		
+		.svg-icon {
+			background-color: var(--krds-tts--color-#{$type}-icon-color);
+		}
+	}
+	
+	.krds-tts-text {
+		color: var(--krds-tts--color-#{$type}-text);
+	}
+}
+
+@mixin tts-color-hover($type: default) {
+	.krds-tts-icon {
+		background-color: var(--krds-tts--color-#{$type}-icon-fill-hover);
+		border-color: var(--krds-tts--color-#{$type}-icon-border);
+	}
+}
+
+@mixin tts-color-pressed($type: default) {
+	.krds-tts-icon {
+		background-color: var(--krds-tts--color-#{$type}-icon-fill-pressed);
+		border-color: var(--krds-tts--color-#{$type}-icon-border);
+	}
+}
+
+@mixin tts-color-disabled($type: default) {
+	.krds-tts-icon {
+		background-color: var(--krds-tts--color-#{$type}-icon-fill-disabled);
+		border-color: var(--krds-tts--color-#{$type}-icon-border-disabled);
+		
+		.svg-icon {
+			background-color: var(--krds-tts--color-#{$type}-icon-color-disabled);
+		}
+	}
+	
+	.krds-tts-text {
+		color: var(--krds-tts--color-#{$type}-text-disabled);
+	}
+}
+
+//모드 설정
+$mode-setting: light;
+
+.krds-tts {
+	@include tts-size-variable();
+	@include tts-color-variable(#{$mode-setting});
+
+	@include flex-layout($d: inline-flex, $ai: center, $jc: flex-start);
+	width: auto;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: var(--krds-transition-base);
+	background-color: transparent;
+	border: 0;
+	padding: 0;
+	
+	// 기본 스타일 (medium 사이즈 기준)
+	gap: var(--krds-tts--gap-medium);
+	
+	// 원형 아이콘 버튼 (tts__atomic)
+	.krds-tts-icon {
+		flex-shrink: 0;
+		@include square(var(--krds-tts--container-size-medium));
+		border-radius: var(--krds-radius-max);
+		border: 0.2rem solid; // 2px (border-width/static-medium)
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		transition: var(--krds-transition-base);
+		background-color: var(--krds-tts--color-default-icon-fill);
+		border-color: var(--krds-tts--color-default-icon-border);
+		box-sizing: border-box;
+		
+		.svg-icon {
+			@include square(var(--krds-tts--svg-icon-size-medium));
+			background-color: var(--krds-tts--color-default-icon-color);
+		}
+	}
+	
+	// 레이블 텍스트
+	.krds-tts-text {
+		cursor: pointer;
+		margin: 0;
+		font-weight: var(--krds-font-weight-regular);
+		font-size: var(--krds-tts--pc-font-size-medium);
+		line-height: var(--krds-line-height-base);
+		color: var(--krds-tts--color-default-text);
+		
+		@include size-medium {
+			font-size: var(--krds-tts--mobile-font-size-medium);
+		}
+	}
+	
+	// 기본 컬러 적용
+	@include tts-color(default);
+	
+	// 사이즈별 스타일
+	&.xsmall {
+		gap: var(--krds-tts--gap-xsmall);
+		
+		.krds-tts-icon {
+			@include square(var(--krds-tts--container-size-xsmall));
+			
+			.svg-icon {
+				@include square(var(--krds-tts--svg-icon-size-xsmall));
+			}
+		}
+		
+		.krds-tts-text {
+			font-size: var(--krds-tts--pc-font-size-xsmall);
+			
+			@include size-medium {
+				font-size: var(--krds-tts--mobile-font-size-xsmall);
+			}
+		}
+	}
+	
+	&.small {
+		gap: var(--krds-tts--gap-small);
+		
+		.krds-tts-icon {
+			@include square(var(--krds-tts--container-size-small));
+			
+			.svg-icon {
+				@include square(var(--krds-tts--svg-icon-size-small));
+			}
+		}
+		
+		.krds-tts-text {
+			font-size: var(--krds-tts--pc-font-size-small);
+			
+			@include size-medium {
+				font-size: var(--krds-tts--mobile-font-size-small);
+			}
+		}
+	}
+	
+	&.medium {
+		.krds-tts-icon {
+			@include square(var(--krds-tts--container-size-medium));
+			
+			.svg-icon {
+				@include square(var(--krds-tts--svg-icon-size-medium));
+			}
+		}
+		
+		.krds-tts-text {
+			font-size: var(--krds-tts--pc-font-size-medium);
+			
+			@include size-medium {
+				font-size: var(--krds-tts--mobile-font-size-medium);
+			}
+		}
+	}
+	
+	// 타입별 스타일
+	&.pause {
+		@include tts-color(pause);
+	}
+	
+	// 호버 상태
+	&:hover {
+		@include tts-color-hover(default);
+		
+		&.pause {
+			@include tts-color-hover(pause);
+		}
+		
+		&.play {
+			@include tts-color-hover(default);
+		}
+	}
+	
+	// 활성/포커스 상태
+	&:active,
+	&:focus {
+		@include tts-color-pressed(default);
+		
+		&.pause {
+			@include tts-color-pressed(pause);
+		}
+		
+		&.play {
+			@include tts-color-pressed(default);
+		}
+	}
+	
+	// 비활성화 상태
+	&[disabled],
+	&.disabled {
+		cursor: default;
+		pointer-events: none;
+		
+		@include tts-color-disabled(default);
+		
+		&.pause {
+			@include tts-color-disabled(pause);
+		}
+		
+		&:hover {
+			@include tts-color-disabled(default);
+			
+			&.pause {
+				@include tts-color-disabled(pause);
+			}
+		}
+	}
+}
+
+// 고대비 모드
+@include color-mode($mode: high-contrast) {
+	.krds-tts {
+		.krds-tts-icon {
+			border-width: 0.2rem;
+		}
+	}
+}

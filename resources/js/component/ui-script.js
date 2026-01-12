@@ -877,13 +877,12 @@ const krds_modal = {
       trigger.addEventListener("click", (event) => {
         event.preventDefault();
         const modalId = trigger.getAttribute("data-target");
-
         if (modalId) {
           // aria 설정
           trigger.setAttribute("data-modal-id", modalId);
           trigger.classList.add("modal-opened");
           trigger.setAttribute("tabindex", "-1");
-
+			
           this.openModal(modalId);
         }
       });
@@ -2145,6 +2144,7 @@ const krds_dropEvent = {
     });
   },
   setupMenuItems(menu) {
+	if (!menu) return; // ← null 체크 추가
     const items = menu.querySelectorAll(".item-link");
 
     items.forEach((item) => {
@@ -2400,6 +2400,223 @@ const nuriToggleEvent = {
   },
 };
 
+/*** * krds_tts * ***/
+const krds_tts = {
+  speechSynthesis: null,
+  activeButton: null,
+  
+  init() {
+    this.speechSynthesis = window.speechSynthesis;
+    // Chrome에서 voices 초기화 트리거(비동기 로드되더라도 speak는 지연 없이 호출해야 함)
+    try {
+      this.speechSynthesis && this.speechSynthesis.getVoices();
+    } catch (e) {}
+    
+    const ttsButtons = document.querySelectorAll(".krds-tts:not([disabled]):not(.disabled)");
+    
+    ttsButtons.forEach((button) => {
+      button.setAttribute("aria-pressed", "false");
+      // onclick이 없으면 이벤트 리스너 추가
+      if (!button.getAttribute("onclick")) {
+        button.addEventListener("click", (e) => {
+          e.preventDefault();
+          const text = button.getAttribute("data-tts-text");
+          if (text) {
+            this.toggle(button, text);
+          }
+        });
+      }
+    });
+  },
+  
+  toggle(button, text) {
+    const isPlaying = button.classList.contains("is-playing");
+    
+    if (isPlaying) {
+      this.stop(button);
+    } else {
+      this.play(button, text);
+    }
+  },
+  
+  play(button, text) {
+    if (!text || text.trim() === '') return;
+    if (!this.speechSynthesis) return;
+    
+    // 다른 버튼이 재생 중이면 멈춤
+    if (this.activeButton && this.activeButton !== button) {
+      this.stop(this.activeButton);
+    }
+    
+    // 상태 업데이트
+    const isPlayType = button.classList.contains("play");
+    if (isPlayType) {
+      this.changeToPause(button);
+    }
+    
+    button.classList.add("is-playing");
+    button.setAttribute("aria-pressed", "true");
+    this.activeButton = button;
+    this.updateText(button, "멈춤");
+    
+    // TTS 재생
+    this.speak(text, button);
+  },
+  
+  stop(button) {
+    if (this.speechSynthesis) {
+      this.speechSynthesis.cancel();
+    }
+    
+    button.classList.remove("is-playing");
+    button.setAttribute("aria-pressed", "false");
+    
+    // Play 타입이었던 경우 원래대로 복원
+    if (button.classList.contains("pause") && button.dataset.wasPlayType === "true") {
+      this.changeToPlay(button);
+    }
+    
+    this.updateText(button, "재생");
+    
+    if (this.activeButton === button) {
+      this.activeButton = null;
+    }
+  },
+  
+  speak(text, button) {
+    if (!this.speechSynthesis) return;
+    // Chrome: user gesture 안에서 speak가 실행되어야 해서 지연 호출(setTimeout 등) 금지
+    if (this.speechSynthesis.paused) {
+      this.speechSynthesis.resume();
+    }
+    this.startUtterance(text, button);
+  },
+  
+  startUtterance(text, button) {
+    if (!this.speechSynthesis) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    // Chrome에서는 lang/voice 타이밍 이슈가 있어 강제 설정은 최소화
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    // 가능한 경우에만 ko 음성/언어 적용 (없으면 브라우저 기본으로 진행)
+    try {
+      const voices = this.speechSynthesis.getVoices?.() || [];
+      const ko = voices.find((v) => (v.lang || "").toLowerCase().startsWith("ko"));
+      if (ko) {
+        utterance.lang = "ko-KR";
+        utterance.voice = ko;
+      }
+    } catch (e) {}
+
+    utterance.onend = () => {
+      if (this.activeButton === button) {
+        this.stop(button);
+      }
+    };
+
+    utterance.onerror = (event) => {
+      // canceled는 사용자/코드 cancel()로 정상 발생 가능
+      if (event.error !== "canceled" && this.activeButton === button) {
+        this.stop(button);
+      }
+    };
+
+    try {
+      // Chrome 우회: 같은 클릭 제스처 안에서 cancel/resume/speak를 한 번에 수행
+      // (비동기 지연은 user-gesture를 깨서 무음이 될 수 있어 사용하지 않음)
+      this.speechSynthesis.cancel();
+      if (this.speechSynthesis.paused) this.speechSynthesis.resume();
+      this.speechSynthesis.speak(utterance);
+      // 일부 Chrome에서 speak 직후 resume이 필요할 때가 있음
+      if (this.speechSynthesis.paused) this.speechSynthesis.resume();
+    } catch (error) {
+      if (this.activeButton === button) {
+        this.stop(button);
+      }
+    }
+  },
+  
+  changeToPause(button) {
+    if (!button.dataset.wasPlayType) {
+      button.dataset.wasPlayType = "true";
+    }
+    button.classList.remove("play");
+    button.classList.add("pause");
+    const icon = button.querySelector(".krds-tts-icon .svg-icon");
+    if (icon) {
+      icon.classList.remove("ico-play");
+      icon.classList.add("ico-stop");
+    }
+  },
+  
+  changeToPlay(button) {
+    button.classList.remove("pause");
+    button.classList.add("play");
+    const icon = button.querySelector(".krds-tts-icon .svg-icon");
+    if (icon) {
+      icon.classList.remove("ico-stop");
+      icon.classList.add("ico-play");
+    }
+    delete button.dataset.wasPlayType;
+  },
+  
+  updateText(button, newText) {
+    const textElement = button.querySelector(".krds-tts-text");
+    if (!textElement) return;
+    
+    // 원래 텍스트 저장 (처음 한 번만)
+    if (!textElement.dataset.originalText) {
+      textElement.dataset.originalText = textElement.textContent.trim();
+    }
+    
+    // 원래 텍스트가 "재생"인 경우만 변경
+    const originalText = textElement.dataset.originalText;
+    if (originalText === "재생") {
+      textElement.textContent = newText === "멈춤" ? "멈춤" : "재생";
+    }
+  },
+};
+
+// 전역 함수: onclick에서 사용
+// 사용법: onclick="krds_playTts('읽을 내용', this)"
+window.krds_playTts = function(text, buttonElement) {
+  if (!text || text.trim() === '') return;
+  // 최소 진단(Chrome 무음 원인 확정용): voices가 0이면 환경/로딩 문제 가능성 큼
+  try {
+    if (window.speechSynthesis) {
+      console.log("[krds-tts] protocol:", location.protocol, "voices:", window.speechSynthesis.getVoices().length);
+    }
+  } catch (e) {}
+  
+  // buttonElement 찾기
+  if (!buttonElement) {
+    const event = window.event || (typeof event !== 'undefined' ? event : null);
+    if (event) {
+      buttonElement = event.currentTarget || event.target?.closest('.krds-tts');
+    }
+    if (!buttonElement) {
+      buttonElement = document.activeElement;
+    }
+  }
+  
+  if (!buttonElement || !buttonElement.classList.contains("krds-tts")) return;
+  
+  // aria-pressed 초기값 설정
+  if (!buttonElement.hasAttribute("aria-pressed")) {
+    buttonElement.setAttribute("aria-pressed", "false");
+  }
+  
+  // 재생/멈춤 토글
+  const isPlaying = buttonElement.classList.contains("is-playing");
+  if (isPlaying) {
+    krds_tts.stop(buttonElement);
+  } else {
+    krds_tts.play(buttonElement, text);
+  }
+};
+
 // 초기 이벤트
 window.addEventListener("DOMContentLoaded", () => {
   // 윈도우 사이즈 체크
@@ -2422,6 +2639,7 @@ window.addEventListener("DOMContentLoaded", () => {
   krds_infoList.init();
   krds_chkBox.init();
   krds_fileUpload.init();
+  krds_tts.init();
 
   krds_helpPanel.init();
   if (windowSize.getWinSize() === "pc") {

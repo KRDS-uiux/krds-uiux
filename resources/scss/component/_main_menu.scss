@@ -129,6 +129,13 @@ $mode-setting: light;
 					transform: rotate(-180deg);
 				}
 			}
+			//251208 대메뉴 선택시 강조효과 추가
+			&.selected {
+				&::before {
+					left: 0;
+					width: 100%;
+				}
+			}
 			&.is-link {
 				&::after {
 					display: none;
@@ -147,6 +154,8 @@ $mode-setting: light;
 		display: none;
 		width: 100%;
 		background-color: var(--krds-main-menu--toggle-color-surface);
+		overflow-y: auto;
+		max-height: calc(70vh - 17rem);
 		&.is-open {
 			display: block;
 		}
